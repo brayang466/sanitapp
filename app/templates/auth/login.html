@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión — SanitApp{% endblock %}
+{% block body_class %}page-login{% endblock %}
+
+{% block guest %}
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="brand-logo lg" width="64" height="64">
+      <h1>SanitApp</h1>
+      <p>Limpieza y desinfección — registro diario</p>
+    </div>
+    {% include '_flash.html' %}
+    <form method="post" class="form">
+      <div class="field">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" required autofocus placeholder="Ingrese su usuario">
+      </div>
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+    </form>
+  </div>
+  <div class="login-bg" aria-hidden="true"></div>
+</div>
+{% endblock %}

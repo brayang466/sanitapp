@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SanitApp{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/logo.svg') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% if usuario_actual %}
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="{{ url_for('main.dashboard') }}" class="brand">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="brand-logo" width="36" height="36">
+        <span class="brand-text">SanitApp</span>
+      </a>
+      <nav class="nav">
+        <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+          Panel
+        </a>
+        <a href="{{ url_for('main.listar_registros') }}" class="nav-link {% if request.endpoint in ('main.listar_registros', 'main.exportar_registros') %}active{% endif %}">
+          Registros
+        </a>
+        <a href="{{ url_for('main.nuevo_registro') }}" class="nav-link nav-cta {% if request.endpoint in ('main.nuevo_registro', 'main.editar_registro') %}active{% endif %}">
+          Nuevo registro
+        </a>
+        {% if usuario_actual.es_admin %}
+        <a href="{{ url_for('admin.listar_responsables') }}" class="nav-link {% if request.endpoint in ('admin.listar_responsables', 'admin.nuevo_responsable', 'admin.toggle_responsable', 'admin.eliminar_responsable') %}active{% endif %}">
+          Responsables
+        </a>
+        {% endif %}
+        {% if usuario_actual.es_superadmin %}
+        <a href="{{ url_for('admin.listar_usuarios') }}" class="nav-link {% if request.endpoint in ('admin.listar_usuarios', 'admin.nuevo_usuario', 'admin.toggle_usuario') %}active{% endif %}">
+          Usuarios
+        </a>
+        {% endif %}
+      </nav>
+      <div class="sidebar-footer">
+        <a href="{{ url_for('perfil.mi_perfil') }}" class="user-profile-card {% if request.endpoint == 'perfil.mi_perfil' %}active{% endif %}">
+          <div class="user-avatar-box">
+            {% if usuario_actual.url_avatar() %}
+            <img src="{{ usuario_actual.url_avatar() }}?v={{ usuario_actual.actualizado_en.timestamp()|int }}" alt="" class="user-avatar-img">
+            {% else %}
+            <span class="user-avatar-initials">{{ usuario_actual.iniciales_avatar() }}</span>
+            {% endif %}
+          </div>
+          <div class="user-profile-info">
+            <strong>{{ usuario_actual.nombre_completo }}</strong>
+            <small>{{ usuario_actual.rol.value }}</small>
+            <span class="user-profile-link">Mi perfil</span>
+          </div>
+        </a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-ghost btn-sm btn-block">Cerrar sesión</a>
+      </div>
+    </aside>
+    <main class="main-content">
+      {% include '_flash.html' %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% else %}
+    {% block guest %}{% endblock %}
+  {% endif %}
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

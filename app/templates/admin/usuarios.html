@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Usuarios — SanitApp{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Usuarios</h1>
+    <p class="muted">Gestión de accesos</p>
+  </div>
+  {% if usuario_actual.es_superadmin %}
+  <a href="{{ url_for('admin.nuevo_usuario') }}" class="btn btn-primary">+ Nuevo usuario</a>
+  {% endif %}
+</header>
+
+<div class="card">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          {% if usuario_actual.es_superadmin %}<th></th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ u.nombre_completo }}</td>
+          <td><code>{{ u.username }}</code></td>
+          <td>{{ u.email }}</td>
+          <td><span class="badge badge-role">{{ u.rol.value }}</span></td>
+          <td>
+            {% if u.activo %}
+            <span class="badge badge-ok">Activo</span>
+            {% else %}
+            <span class="badge badge-muted">Inactivo</span>
+            {% endif %}
+          </td>
+          {% if usuario_actual.es_superadmin %}
+          <td>
+            {% if u.id != usuario_actual.id %}
+            <form method="post" action="{{ url_for('admin.toggle_usuario', usuario_id=u.id) }}" class="inline-form">
+              <button type="submit" class="btn btn-ghost btn-sm">
+                {{ 'Desactivar' if u.activo else 'Activar' }}
+              </button>
+            </form>
+            {% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Panel — SanitApp{% endblock %}
+
+{% block content %}
+<section class="welcome-banner card">
+  <div class="welcome-text">
+    <p class="welcome-saludo">{{ saludo }},</p>
+    <h1>{{ usuario.nombre_completo }}</h1>
+    <p class="muted">Bienvenida a SanitApp · Limpieza y desinfección</p>
+  </div>
+  <div class="welcome-meta">
+    <span class="welcome-date">{{ hoy.strftime('%d/%m/%Y') }}</span>
+  </div>
+</section>
+
+<section class="stats-grid">
+  <article class="stat-card">
+    <span class="stat-label">Hoy</span>
+    <span class="stat-value">{{ total_hoy }}</span>
+    <a href="{{ url_for('main.listar_registros', periodo='diario', fecha=hoy.isoformat()) }}" class="stat-link">Ver detalle →</a>
+  </article>
+  <article class="stat-card stat-ok">
+    <span class="stat-label">Esta semana</span>
+    <span class="stat-value">{{ resumen_semana.total }}</span>
+    <small class="stat-sub">{{ resumen_semana.cumple }} cumple · {{ resumen_semana.no_cumple }} no cumple</small>
+    <a href="{{ url_for('main.listar_registros', periodo='semanal', fecha=hoy.isoformat()) }}" class="stat-link">Ver semanal →</a>
+  </article>
+  <article class="stat-card stat-warn">
+    <span class="stat-label">Este mes</span>
+    <span class="stat-value">{{ resumen_mes.total }}</span>
+    <small class="stat-sub">{{ resumen_mes.cumple }} cumple · {{ resumen_mes.no_cumple }} no cumple</small>
+    <a href="{{ url_for('main.listar_registros', periodo='mensual', mes='%04d-%02d' % (hoy.year, hoy.month)) }}" class="stat-link">Ver mensual →</a>
+  </article>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <h2>Actividad reciente</h2>
+    <a href="{{ url_for('main.listar_registros', periodo='diario', fecha=hoy.isoformat()) }}" class="link">Ver historial →</a>
+  </div>
+  {% if recientes %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Área</th>
+          <th>Equipo / Superficie</th>
+          <th>Frecuencia</th>
+          <th>Estado</th>
+          <th>Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in recientes %}
+        <tr>
+          <td>{{ r.fecha.strftime('%d/%m/%Y') }}</td>
+          <td>{{ r.area }}</td>
+          <td>{{ r.equipo_o_superficie }}</td>
+          <td><span class="badge badge-role">{{ r.frecuencia }}</span></td>
+          <td>
+            <span class="badge {% if r.cumple %}badge-ok{% else %}badge-warn{% endif %}">
+              {{ r.estado_etiqueta }}
+            </span>
+          </td>
+          <td>{{ r.responsable }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty-state">Aún no hay registros en el sistema.</p>
+  {% endif %}
+</section>
+{% endblock %}

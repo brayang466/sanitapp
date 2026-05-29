@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% from "macros/select_lista.html" import select_lista %}
+{% block title %}{% if registro %}Editar{% else %}Nuevo{% endif %} registro — SanitApp{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>{% if registro %}Editar registro{% else %}Nuevo registro{% endif %}</h1>
+    <p class="muted">Complete el formato de limpieza y desinfección</p>
+  </div>
+  {% if usuario_actual.es_admin %}
+  <a href="{{ url_for('admin.listar_responsables') }}" class="btn btn-ghost btn-sm">Gestionar responsables</a>
+  {% endif %}
+</header>
+
+<form method="post" class="form-card card" id="form-registro">
+  <div class="form-grid">
+    <div class="field">
+      <label for="fecha">FECHA</label>
+      <input type="date" id="fecha" name="fecha" required
+        value="{% if datos.fecha %}{% if datos.fecha is string %}{{ datos.fecha }}{% else %}{{ datos.fecha.isoformat() }}{% endif %}{% endif %}">
+    </div>
+    <div class="field">
+      {{ select_lista('area', 'ÁREA', areas, datos.area or '', 'Seleccione el área') }}
+    </div>
+    <div class="field field-span-2">
+      {{ select_lista('equipo_o_superficie', 'EQUIPO O SUPERFICIE', equipos, datos.equipo_o_superficie or '', 'Seleccione equipo o superficie') }}
+    </div>
+    <div class="field">
+      {{ select_lista('frecuencia', 'FRECUENCIA', frecuencias, datos.frecuencia or '', 'Seleccione la frecuencia') }}
+    </div>
+    <div class="field field-span-2">
+      {% if responsables %}
+      {{ select_lista('responsable', 'RESPONSABLE', responsables, datos.responsable or '', 'Seleccione el responsable') }}
+      {% else %}
+      <p class="empty-hint">
+        No hay responsables cargados.
+        {% if usuario_actual.es_admin %}
+        <a href="{{ url_for('admin.listar_responsables') }}">Agregar personal</a>
+        {% else %}
+        Contacte al administrador.
+        {% endif %}
+      </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <fieldset class="cumplimiento-group">
+    <legend>Cumplimiento</legend>
+    <label class="radio-card">
+      <input type="radio" name="cumplimiento" value="cumple"
+        {% if datos.cumple and not datos.no_cumple %}checked{% endif %}>
+      <span class="radio-card-body">
+        <strong>CUMPLE</strong>
+        <small>La actividad se realizó correctamente</small>
+      </span>
+    </label>
+    <label class="radio-card">
+      <input type="radio" name="cumplimiento" value="no_cumple"
+        {% if datos.no_cumple %}checked{% endif %}>
+      <span class="radio-card-body">
+        <strong>NO CUMPLE</strong>
+        <small>Requiere medida correctiva</small>
+      </span>
+    </label>
+  </fieldset>
+
+  <div class="field field-span-2" id="medida-wrap">
+    <label for="medida_correctiva">MEDIDA CORRECTIVA</label>
+    <textarea id="medida_correctiva" name="medida_correctiva" rows="3"
+      placeholder="Obligatorio si no cumple">{{ datos.medida_correctiva or '' }}</textarea>
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.listar_registros') }}" class="btn btn-ghost">Cancelar</a>
+    <button type="submit" class="btn btn-primary" {% if not responsables %}disabled{% endif %}>Guardar registro</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const form = document.getElementById('form-registro');
+    const medida = document.getElementById('medida_correctiva');
+    const wrap = document.getElementById('medida-wrap');
+    function sync() {
+      const noCumple = form.querySelector('input[value="no_cumple"]:checked');
+      wrap.classList.toggle('required', !!noCumple);
+      medida.required = !!noCumple;
+    }
+    form.querySelectorAll('input[name="cumplimiento"]').forEach(r => r.addEventListener('change', sync));
+    sync();
+  })();
+</script>
+{% endblock %}

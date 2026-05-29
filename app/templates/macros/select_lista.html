@@ -1,0 +1,43 @@
+{% macro select_lista(name, label, opciones, valor='', placeholder='Seleccione una opción', required=true) %}
+<div class="select-lista" data-select-lista>
+  <label class="select-lista-label" for="{{ name }}-trigger">{{ label }}</label>
+  <input type="hidden" name="{{ name }}" id="{{ name }}" value="{{ valor }}" {% if required %}required{% endif %}>
+  <button
+    type="button"
+    class="select-lista-trigger"
+    id="{{ name }}-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-placeholder="{{ placeholder }}"
+  >
+    <span class="select-lista-text {% if not valor %}is-placeholder{% endif %}">
+      {{ valor or placeholder }}
+    </span>
+    <span class="select-lista-chevron" aria-hidden="true">▾</span>
+  </button>
+  <div class="select-lista-panel" role="listbox" hidden>
+    <div class="select-lista-search-wrap">
+      <input
+        type="search"
+        class="select-lista-search"
+        placeholder="Buscar…"
+        autocomplete="off"
+        aria-label="Buscar en {{ label }}"
+      >
+    </div>
+    <ul class="select-lista-options">
+      {% if valor and valor not in opciones %}
+      <li class="select-lista-option is-current" data-value="{{ valor }}" role="option">{{ valor }}</li>
+      {% endif %}
+      {% for op in opciones %}
+      <li
+        class="select-lista-option{% if op == valor %} is-selected{% endif %}"
+        data-value="{{ op }}"
+        role="option"
+      >{{ op }}</li>
+      {% endfor %}
+    </ul>
+    <p class="select-lista-empty" hidden>Sin coincidencias</p>
+  </div>
+</div>
+{% endmacro %}

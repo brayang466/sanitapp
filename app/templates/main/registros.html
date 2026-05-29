@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Registros — SanitApp{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Historial de registros</h1>
+    <p class="muted">{{ etiqueta }} — detalle por periodo</p>
+  </div>
+  <div class="header-actions">
+    <a href="{{ url_for('main.exportar_registros', formato='excel', periodo=periodo, fecha=fecha_ref.isoformat(), mes=mes_ref, frecuencia=frecuencia_filtro or '') }}" class="btn btn-secondary btn-sm">Excel</a>
+    <a href="{{ url_for('main.exportar_registros', formato='pdf', periodo=periodo, fecha=fecha_ref.isoformat(), mes=mes_ref, frecuencia=frecuencia_filtro or '') }}" class="btn btn-secondary btn-sm">PDF</a>
+  </div>
+</header>
+
+<nav class="period-tabs" aria-label="Tipo de periodo">
+  <a href="{{ url_for('main.listar_registros', periodo='diario', fecha=fecha_ref.isoformat(), frecuencia=frecuencia_filtro or '') }}"
+     class="period-tab {% if periodo == 'diario' %}active{% endif %}">Diario</a>
+  <a href="{{ url_for('main.listar_registros', periodo='semanal', fecha=fecha_ref.isoformat(), frecuencia=frecuencia_filtro or '') }}"
+     class="period-tab {% if periodo == 'semanal' %}active{% endif %}">Semanal</a>
+  <a href="{{ url_for('main.listar_registros', periodo='mensual', mes=mes_ref, frecuencia=frecuencia_filtro or '') }}"
+     class="period-tab {% if periodo == 'mensual' %}active{% endif %}">Mensual</a>
+</nav>
+
+<form method="get" class="filter-panel card">
+  <input type="hidden" name="periodo" value="{{ periodo }}">
+  <div class="filter-panel-header">
+    <span class="filter-panel-title">Filtros</span>
+    <span class="filter-panel-hint">Periodo: {{ periodo|capitalize }}</span>
+  </div>
+  <div class="filter-panel-grid">
+    <div class="filter-field">
+      {% if periodo == 'mensual' %}
+      <label for="mes">MES</label>
+      <input type="month" id="mes" name="mes" class="filter-control" value="{{ mes_ref }}">
+      {% else %}
+      <label for="fecha">{% if periodo == 'semanal' %}SEMANA (REFERENCIA){% else %}FECHA{% endif %}</label>
+      <input type="date" id="fecha" name="fecha" class="filter-control" value="{{ fecha_ref.isoformat() }}">
+      {% endif %}
+    </div>
+    <div class="filter-field filter-field-wide">
+      <label for="frecuencia">FRECUENCIA DEL REGISTRO</label>
+      <div class="filter-select-wrap">
+        <select id="frecuencia" name="frecuencia" class="filter-control filter-select">
+          <option value="">Todas las frecuencias</option>
+          {% for f in frecuencias_opciones %}
+          <option value="{{ f }}" {% if frecuencia_filtro == f %}selected{% endif %}>{{ f }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="filter-field filter-field-action">
+      <button type="submit" class="btn btn-primary filter-submit">Aplicar filtros</button>
+    </div>
+  </div>
+</form>
+
+<section class="stats-grid stats-grid-compact">
+  <article class="stat-card">
+    <span class="stat-label">Total</span>
+    <span class="stat-value">{{ resumen.total }}</span>
+  </article>
+  <article class="stat-card stat-ok">
+    <span class="stat-label">Cumple</span>
+    <span class="stat-value">{{ resumen.cumple }}</span>
+  </article>
+  <article class="stat-card stat-warn">
+    <span class="stat-label">No cumple</span>
+    <span class="stat-value">{{ resumen.no_cumple }}</span>
+  </article>
+</section>
+
+<div class="card">
+  {% if registros %}
+  <div class="table-wrap">
+    <table class="data-table data-table-formato">
+      <thead>
+        <tr>
+          <th>FECHA</th>
+          <th>ÁREA</th>
+          <th>EQUIPO O SUPERFICIE</th>
+          <th>FRECUENCIA</th>
+          <th>NO CUMPLE</th>
+          <th>CUMPLE</th>
+          <th>MEDIDA CORRECTIVA</th>
+          <th>RESPONSABLE</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+        <tr>
+          <td>{{ r.fecha.strftime('%d/%m/%Y') }}</td>
+          <td>{{ r.area }}</td>
+          <td>{{ r.equipo_o_superficie }}</td>
+          <td><span class="badge badge-role">{{ r.frecuencia }}</span></td>
+          <td class="center">{% if r.no_cumple %}<span class="mark">✓</span>{% endif %}</td>
+          <td class="center">{% if r.cumple %}<span class="mark">✓</span>{% endif %}</td>
+          <td>{{ r.medida_correctiva or '—' }}</td>
+          <td>{{ r.responsable }}</td>
+          <td class="actions">
+            <a href="{{ url_for('main.editar_registro', registro_id=r.id) }}" class="btn btn-ghost btn-sm">Editar</a>
+            {% if usuario_actual.es_admin %}
+            <form method="post" action="{{ url_for('main.eliminar_registro', registro_id=r.id) }}" class="inline-form" onsubmit="return confirm('¿Eliminar este registro?');">
+              <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty-state">No hay registros en este periodo{% if frecuencia_filtro %} con frecuencia «{{ frecuencia_filtro }}»{% endif %}.</p>
+  {% endif %}
+</div>
+{% endblock %}

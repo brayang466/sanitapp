@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Responsables — SanitApp{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Responsables</h1>
+    <p class="muted">Personal que aparece en el formulario de limpieza y desinfección</p>
+  </div>
+</header>
+
+<section class="card">
+  <h2 class="section-title">Agregar responsable</h2>
+  <form method="post" action="{{ url_for('admin.nuevo_responsable') }}" class="form-inline">
+    <div class="field field-grow">
+      <label for="nombre_completo">Nombre completo</label>
+      <input type="text" id="nombre_completo" name="nombre_completo" required maxlength="150"
+        placeholder="Ej: MARIA ELENA RODRIGUEZ PEREZ">
+    </div>
+    <button type="submit" class="btn btn-primary">Agregar</button>
+  </form>
+</section>
+
+<div class="card">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nombre completo</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in responsables %}
+        <tr>
+          <td>{{ r.nombre_completo }}</td>
+          <td>
+            {% if r.activo %}
+            <span class="badge badge-ok">Activo</span>
+            {% else %}
+            <span class="badge badge-muted">Inactivo</span>
+            {% endif %}
+          </td>
+          <td class="actions">
+            <form method="post" action="{{ url_for('admin.toggle_responsable', responsable_id=r.id) }}" class="inline-form">
+              <button type="submit" class="btn btn-ghost btn-sm">
+                {{ 'Retirar de lista' if r.activo else 'Reactivar' }}
+              </button>
+            </form>
+            {% if usuario_actual.es_superadmin and not r.activo %}
+            <form method="post" action="{{ url_for('admin.eliminar_responsable', responsable_id=r.id) }}" class="inline-form"
+              onsubmit="return confirm('¿Eliminar permanentemente a {{ r.nombre_completo }}?');">
+              <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="empty-state">
+            No hay responsables. Ejecute <code>database/agregar_responsables.sql</code> en MySQL Workbench
+            o agregue uno arriba.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,3 @@
+from app.data.catalogos import AREAS, EQUIPOS_SUPERFICIE, FRECUENCIAS
+
+__all__ = ["AREAS", "EQUIPOS_SUPERFICIE", "FRECUENCIAS"]

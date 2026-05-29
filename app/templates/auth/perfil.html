@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil — SanitApp{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Mi perfil</h1>
+    <p class="muted">{{ usuario.nombre_completo }} · {{ usuario.rol.value }}</p>
+  </div>
+</header>
+
+<div class="perfil-grid">
+  <section class="card perfil-avatar-card">
+    <h2 class="section-title">Foto de perfil</h2>
+    <div class="perfil-avatar-preview">
+      {% if usuario.url_avatar() %}
+      <img src="{{ usuario.url_avatar() }}?v={{ usuario.actualizado_en.timestamp()|int }}" alt="Avatar" class="perfil-avatar-img">
+      {% else %}
+      <span class="perfil-avatar-fallback">{{ usuario.iniciales_avatar() }}</span>
+      {% endif %}
+    </div>
+    <form method="post" enctype="multipart/form-data" class="perfil-avatar-form">
+      <input type="hidden" name="accion" value="avatar">
+      <div class="field">
+        <label for="avatar">Subir imagen (máx. 2 MB)</label>
+        <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/png,image/webp,image/gif">
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Guardar foto</button>
+    </form>
+    {% if usuario.avatar %}
+    <form method="post" class="perfil-quitar-avatar">
+      <input type="hidden" name="accion" value="quitar_avatar">
+      <button type="submit" class="btn btn-ghost btn-sm">Quitar foto</button>
+    </form>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Cambiar contraseña</h2>
+    <form method="post" class="form">
+      <input type="hidden" name="accion" value="password">
+      <div class="field">
+        <label for="password_actual">Contraseña actual</label>
+        <input type="password" id="password_actual" name="password_actual" required autocomplete="current-password">
+      </div>
+      <div class="field">
+        <label for="password_nueva">Nueva contraseña</label>
+        <input type="password" id="password_nueva" name="password_nueva" required minlength="8" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label for="password_confirmar">Confirmar nueva contraseña</label>
+        <input type="password" id="password_confirmar" name="password_confirmar" required minlength="8" autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
