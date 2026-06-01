@@ -177,4 +177,4 @@ EQUIPOS_SUPERFICIE = [
     "RIEL MENOR",
 ]
 
-FRECUENCIAS = ["Diaria", "Semanal", "Quincenal", "Mensual", "Por evento"]
+FRECUENCIAS = ["Diaria", "Semanal", "Quincenal", "Mensual", "Trimestral", "Por evento"]

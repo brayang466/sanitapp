@@ -94,8 +94,8 @@
           <td>{{ r.area }}</td>
           <td>{{ r.equipo_o_superficie }}</td>
           <td><span class="badge badge-role">{{ r.frecuencia }}</span></td>
-          <td class="center">{% if r.no_cumple %}<span class="mark">✓</span>{% endif %}</td>
-          <td class="center">{% if r.cumple %}<span class="mark">✓</span>{% endif %}</td>
+          <td class="center">{% if r.no_cumple %}<span class="mark mark-no" aria-label="No cumple">✕</span>{% endif %}</td>
+          <td class="center">{% if r.cumple %}<span class="mark mark-ok" aria-label="Cumple">✓</span>{% endif %}</td>
           <td>{{ r.medida_correctiva or '—' }}</td>
           <td>{{ r.responsable }}</td>
           <td class="actions">

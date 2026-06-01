@@ -575,8 +575,16 @@ a:hover {
 }
 
 .mark {
-  color: var(--primary);
   font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.mark-ok {
+  color: var(--ok);
+}
+
+.mark-no {
+  color: var(--danger);
 }
 
 .actions {
