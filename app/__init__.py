@@ -46,6 +46,7 @@ def register_context(app: Flask) -> None:
             "usuario_actual": usuario_actual(),
             "RolUsuario": RolUsuario,
             "saludo_horario": saludo_por_hora(),
+            "static_v": app.config.get("STATIC_VERSION", "1"),
         }
 
 
