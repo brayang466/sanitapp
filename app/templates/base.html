@@ -13,8 +13,27 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% if usuario_actual %}
-  <div class="app-shell">
-    <aside class="sidebar">
+  <div class="app-shell" id="app-shell">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden aria-hidden="true"></div>
+    <header class="mobile-topbar">
+      <button
+        type="button"
+        class="nav-toggle"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="app-sidebar"
+        aria-label="Abrir menú de navegación"
+      >
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+      </button>
+      <a href="{{ url_for('main.dashboard') }}" class="brand brand-mobile">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="brand-logo" width="32" height="32">
+        <span class="brand-text">SanitApp</span>
+      </a>
+    </header>
+    <aside class="sidebar" id="app-sidebar">
       <a href="{{ url_for('main.dashboard') }}" class="brand">
         <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="brand-logo" width="36" height="36">
         <span class="brand-text">SanitApp</span>

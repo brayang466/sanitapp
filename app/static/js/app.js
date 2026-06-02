@@ -1,5 +1,48 @@
 // SanitApp — utilidades front-end
 
+function initMobileNav() {
+  const shell = document.getElementById('app-shell');
+  const toggle = document.getElementById('nav-toggle');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const sidebar = document.getElementById('app-sidebar');
+  if (!shell || !toggle || !backdrop || !sidebar) return;
+
+  const mq = window.matchMedia('(max-width: 900px)');
+
+  function setOpen(open) {
+    shell.classList.toggle('nav-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    backdrop.hidden = !open;
+    backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.classList.toggle('nav-open', open);
+  }
+
+  function closeNav() {
+    if (mq.matches) setOpen(false);
+  }
+
+  toggle.addEventListener('click', () => {
+    setOpen(!shell.classList.contains('nav-open'));
+  });
+
+  backdrop.addEventListener('click', closeNav);
+
+  sidebar.querySelectorAll('.nav-link, .sidebar-footer a').forEach((link) => {
+    link.addEventListener('click', closeNav);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && shell.classList.contains('nav-open')) closeNav();
+  });
+
+  mq.addEventListener('change', () => {
+    if (!mq.matches) setOpen(false);
+  });
+}
+
+initMobileNav();
+
 document.querySelectorAll('.flash').forEach((el) => {
   setTimeout(() => {
     el.style.opacity = '0';

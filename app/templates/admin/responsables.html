@@ -22,7 +22,38 @@
 </section>
 
 <div class="card">
-  <div class="table-wrap">
+  {% if not responsables %}
+  <p class="empty-state empty-state-mobile">No hay responsables. Ejecute <code>database/agregar_responsables.sql</code> en MySQL Workbench o agregue uno arriba.</p>
+  {% else %}
+  <div class="admin-lista" aria-label="Lista de responsables">
+    {% for r in responsables %}
+    <article class="admin-card">
+      <header class="admin-card-header">
+        <h3 class="admin-card-title">{{ r.nombre_completo }}</h3>
+        {% if r.activo %}
+        <span class="badge badge-ok">Activo</span>
+        {% else %}
+        <span class="badge badge-muted">Inactivo</span>
+        {% endif %}
+      </header>
+      <div class="admin-card-actions">
+        <form method="post" action="{{ url_for('admin.toggle_responsable', responsable_id=r.id) }}" class="inline-form">
+          <button type="submit" class="btn btn-ghost btn-sm">
+            {{ 'Retirar de lista' if r.activo else 'Reactivar' }}
+          </button>
+        </form>
+        {% if usuario_actual.es_superadmin and not r.activo %}
+        <form method="post" action="{{ url_for('admin.eliminar_responsable', responsable_id=r.id) }}" class="inline-form"
+          onsubmit="return confirm('¿Eliminar permanentemente a {{ r.nombre_completo }}?');">
+          <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+        </form>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="table-wrap table-desktop-only">
     <table class="data-table">
       <thead>
         <tr>

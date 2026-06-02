@@ -13,7 +13,43 @@
 </header>
 
 <div class="card">
-  <div class="table-wrap">
+  <div class="admin-lista" aria-label="Lista de usuarios">
+    {% for u in usuarios %}
+    <article class="admin-card">
+      <header class="admin-card-header">
+        <h3 class="admin-card-title">{{ u.nombre_completo }}</h3>
+        <div class="admin-card-badges">
+          <span class="badge badge-role">{{ u.rol.value }}</span>
+          {% if u.activo %}
+          <span class="badge badge-ok">Activo</span>
+          {% else %}
+          <span class="badge badge-muted">Inactivo</span>
+          {% endif %}
+        </div>
+      </header>
+      <dl class="admin-card-meta">
+        <div class="admin-card-meta-item">
+          <dt>Usuario</dt>
+          <dd><code>{{ u.username }}</code></dd>
+        </div>
+        <div class="admin-card-meta-item">
+          <dt>Email</dt>
+          <dd>{{ u.email }}</dd>
+        </div>
+      </dl>
+      {% if usuario_actual.es_superadmin and u.id != usuario_actual.id %}
+      <div class="admin-card-actions">
+        <form method="post" action="{{ url_for('admin.toggle_usuario', usuario_id=u.id) }}" class="inline-form">
+          <button type="submit" class="btn btn-ghost btn-sm">
+            {{ 'Desactivar' if u.activo else 'Activar' }}
+          </button>
+        </form>
+      </div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  <div class="table-wrap table-desktop-only">
     <table class="data-table">
       <thead>
         <tr>

@@ -17,7 +17,7 @@ def build_database_uri() -> str:
 
 class Config:
     # Cambiar al desplegar para forzar recarga de CSS/JS en navegadores
-    STATIC_VERSION = os.getenv("STATIC_VERSION", "20260602")
+    STATIC_VERSION = os.getenv("STATIC_VERSION", "20260604")
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-cambiar-en-produccion")
     SQLALCHEMY_DATABASE_URI = build_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False

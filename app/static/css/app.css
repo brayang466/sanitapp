@@ -567,6 +567,216 @@ a:hover {
   white-space: nowrap;
 }
 
+.table-desktop-only {
+  display: block;
+}
+
+.empty-state-mobile {
+  display: none;
+}
+
+/* Actividad reciente — vista móvil (panel) */
+.actividad-lista {
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.actividad-card {
+  padding: 1rem 1.1rem;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.actividad-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.actividad-fecha {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.actividad-equipo {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.actividad-meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.actividad-meta-item {
+  margin: 0;
+}
+
+.actividad-meta-item dt {
+  margin: 0 0 0.15rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.actividad-meta-item dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.35;
+  word-wrap: break-word;
+}
+
+/* Admin — usuarios y responsables (vista móvil) */
+.admin-lista {
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0;
+}
+
+.admin-card {
+  padding: 1rem 1.1rem;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.admin-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+.admin-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.admin-card-meta {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0 0 0.75rem;
+}
+
+.admin-card-meta-item {
+  margin: 0;
+}
+
+.admin-card-meta-item dt {
+  margin: 0 0 0.15rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.admin-card-meta-item dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.35;
+  word-wrap: break-word;
+}
+
+.admin-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.admin-card-actions .inline-form {
+  display: block;
+  width: 100%;
+}
+
+.admin-card-actions .btn {
+  width: 100%;
+  min-height: 44px;
+}
+
+/* Barra superior móvil + menú lateral */
+.mobile-topbar,
+.sidebar-backdrop {
+  display: none;
+}
+
+.nav-toggle {
+  display: grid;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.nav-toggle-bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #ecfdf5;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.app-shell.nav-open .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.app-shell.nav-open .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.app-shell.nav-open .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.brand-mobile {
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.brand-mobile .brand-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Lista de registros (sin scroll horizontal) */
 .registros-lista {
   display: flex;
@@ -1273,23 +1483,217 @@ code {
 
 @media (max-width: 900px) {
   .app-shell {
-    grid-template-columns: 1fr;
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 120;
+    padding: 0.65rem 1rem;
+    padding-top: max(0.65rem, env(safe-area-inset-top));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    background: linear-gradient(180deg, var(--sidebar) 0%, #062926 100%);
+    color: #ecfdf5;
+    box-shadow: 0 4px 16px rgba(6, 41, 38, 0.35);
+  }
+
+  .sidebar-backdrop:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 180;
+    background: rgba(15, 23, 42, 0.55);
+    opacity: 1;
+    pointer-events: auto;
+    animation: backdrop-in 0.25s ease;
+  }
+
+  @keyframes backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   .sidebar {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(300px, 88vw);
+    z-index: 190;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.25);
+    padding-top: max(1.5rem, env(safe-area-inset-top));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  .app-shell.nav-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar > .brand {
+    display: none;
   }
 
   .nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex: 1;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex: none;
+  }
+
+  .nav-link {
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .sidebar-footer {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+  }
+
+  .main-content {
+    padding: 1rem;
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    max-width: none;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1.1rem 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .welcome-banner h1 {
+    font-size: clamp(1.2rem, 5.5vw, 1.65rem);
+  }
+
+  .page-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .page-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .page-header .header-actions {
+    width: 100%;
+  }
+
+  .page-header .header-actions .btn {
+    flex: 1;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+
+  .period-tabs {
+    width: 100%;
+    display: flex;
+  }
+
+  .period-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.7rem 0.5rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+  }
+
+  .filter-panel {
+    padding: 1rem 1.1rem;
+  }
+
+  .filter-panel-header {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .filter-control,
+  .filter-select,
+  input.filter-control[type="date"],
+  input.filter-control[type="month"] {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+
+  .btn-sm {
+    min-height: 40px;
+    padding: 0.5rem 0.85rem;
+  }
+
+  .card {
+    padding: 1rem 1.1rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .table-desktop-only {
+    display: none !important;
+  }
+
+  .empty-state-mobile {
+    display: block;
+    margin: 0;
+  }
+
+  .actividad-lista,
+  .admin-lista {
+    display: flex;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-inline .field-grow {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .form-inline .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .page-header > .btn-primary {
+    width: 100%;
+    min-height: 44px;
   }
 
   .form-grid,
@@ -1302,8 +1706,56 @@ code {
     grid-column: span 1;
   }
 
-  .main-content {
-    padding: 1.25rem;
+  .form-card input[type="text"],
+  .form-card input[type="email"],
+  .form-card input[type="password"],
+  .form-card input[type="date"],
+  .form-card select,
+  .form-card textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .select-lista-trigger {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .modal-dialog {
+    margin: 0 auto;
+    max-height: calc(100dvh - 2.5rem);
+    overflow-y: auto;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+
+  body.nav-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-sub {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .stat-sub-sep {
+    display: none;
+  }
+
+  .registro-card-meta {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

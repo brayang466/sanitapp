@@ -48,7 +48,29 @@
     <a href="{{ url_for('main.listar_registros', periodo='diario', fecha=hoy.isoformat()) }}" class="link">Ver historial →</a>
   </div>
   {% if recientes %}
-  <div class="table-wrap">
+  <div class="actividad-lista" aria-label="Actividad reciente">
+    {% for r in recientes %}
+    <article class="actividad-card">
+      <div class="actividad-card-top">
+        <span class="actividad-fecha">{{ r.fecha.strftime('%d/%m/%Y') }}</span>
+        <span class="badge badge-role">{{ r.frecuencia }}</span>
+        {{ badge_estado(r.cumple) }}
+      </div>
+      <p class="actividad-equipo">{{ r.equipo_o_superficie }}</p>
+      <dl class="actividad-meta">
+        <div class="actividad-meta-item">
+          <dt>Área</dt>
+          <dd>{{ r.area }}</dd>
+        </div>
+        <div class="actividad-meta-item">
+          <dt>Responsable</dt>
+          <dd>{{ r.responsable }}</dd>
+        </div>
+      </dl>
+    </article>
+    {% endfor %}
+  </div>
+  <div class="table-wrap table-desktop-only">
     <table class="data-table">
       <thead>
         <tr>
