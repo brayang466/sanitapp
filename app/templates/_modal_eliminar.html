@@ -1,0 +1,25 @@
+<div id="modal-eliminar" class="modal-overlay" hidden aria-hidden="true">
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-eliminar-titulo">
+    <div class="modal-icon modal-icon-danger" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      </svg>
+    </div>
+    <h2 id="modal-eliminar-titulo" class="modal-title">¿Eliminar este registro?</h2>
+    <p class="modal-text">
+      Está a punto de eliminar permanentemente un registro del historial de limpieza y desinfección.
+      <strong>Esta acción no se puede deshacer.</strong>
+    </p>
+    <div class="modal-detail card card-compact" id="modal-eliminar-detalle">
+      <p><span class="modal-detail-label">Fecha</span> <span id="modal-del-fecha">—</span></p>
+      <p><span class="modal-detail-label">Área</span> <span id="modal-del-area">—</span></p>
+      <p><span class="modal-detail-label">Equipo / superficie</span> <span id="modal-del-equipo">—</span></p>
+      <p><span class="modal-detail-label">Responsable</span> <span id="modal-del-responsable">—</span></p>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" data-modal-close>Cancelar</button>
+      <button type="button" class="btn btn-danger" id="modal-eliminar-confirmar">Sí, eliminar</button>
+    </div>
+  </div>
+</div>

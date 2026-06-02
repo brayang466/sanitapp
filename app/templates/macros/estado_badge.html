@@ -1,0 +1,13 @@
+{% macro badge_estado(cumple) %}
+  {% if cumple %}
+  <span class="badge badge-ok badge-estado">
+    <span class="badge-estado-icon badge-estado-ok" aria-hidden="true">✓</span>
+    Cumple
+  </span>
+  {% else %}
+  <span class="badge badge-warn badge-estado">
+    <span class="badge-estado-icon badge-estado-no" aria-hidden="true">✕</span>
+    No cumple
+  </span>
+  {% endif %}
+{% endmacro %}

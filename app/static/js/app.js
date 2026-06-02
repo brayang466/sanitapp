@@ -107,3 +107,58 @@ function initSelectLista(root) {
 }
 
 document.querySelectorAll('[data-select-lista]').forEach(initSelectLista);
+
+/* Modal eliminar registro */
+function initModalEliminar() {
+  const overlay = document.getElementById('modal-eliminar');
+  if (!overlay) return;
+
+  const confirmBtn = document.getElementById('modal-eliminar-confirmar');
+  let formPendiente = null;
+
+  function abrirModal(form, datos) {
+    document.getElementById('modal-del-fecha').textContent = datos.fecha || '—';
+    document.getElementById('modal-del-area').textContent = datos.area || '—';
+    document.getElementById('modal-del-equipo').textContent = datos.equipo || '—';
+    document.getElementById('modal-del-responsable').textContent = datos.responsable || '—';
+    formPendiente = form;
+    overlay.hidden = false;
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    confirmBtn.focus();
+  }
+
+  function cerrarModal() {
+    overlay.hidden = true;
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    formPendiente = null;
+  }
+
+  document.querySelectorAll('.js-eliminar-registro').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const form = btn.closest('.form-eliminar-registro');
+      if (!form) return;
+      abrirModal(form, {
+        fecha: btn.dataset.fecha,
+        area: btn.dataset.area,
+        equipo: btn.dataset.equipo,
+        responsable: btn.dataset.responsable,
+      });
+    });
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    if (formPendiente) formPendiente.submit();
+  });
+
+  overlay.querySelectorAll('[data-modal-close]').forEach((el) => {
+    el.addEventListener('click', cerrarModal);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.hidden && e.key === 'Escape') cerrarModal();
+  });
+}
+
+initModalEliminar();

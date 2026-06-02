@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/estado_badge.html" import badge_estado %}
 {% block title %}Panel — SanitApp{% endblock %}
 
 {% block content %}
@@ -22,13 +23,21 @@
   <article class="stat-card stat-ok">
     <span class="stat-label">Esta semana</span>
     <span class="stat-value">{{ resumen_semana.total }}</span>
-    <small class="stat-sub">{{ resumen_semana.cumple }} cumple · {{ resumen_semana.no_cumple }} no cumple</small>
+    <small class="stat-sub">
+      <span class="stat-sub-item"><span class="stat-label-icon stat-label-ok" aria-hidden="true">✓</span> {{ resumen_semana.cumple }} cumple</span>
+      <span class="stat-sub-sep">·</span>
+      <span class="stat-sub-item"><span class="stat-label-icon stat-label-no" aria-hidden="true">✕</span> {{ resumen_semana.no_cumple }} no cumple</span>
+    </small>
     <a href="{{ url_for('main.listar_registros', periodo='semanal', fecha=hoy.isoformat()) }}" class="stat-link">Ver semanal →</a>
   </article>
   <article class="stat-card stat-warn">
     <span class="stat-label">Este mes</span>
     <span class="stat-value">{{ resumen_mes.total }}</span>
-    <small class="stat-sub">{{ resumen_mes.cumple }} cumple · {{ resumen_mes.no_cumple }} no cumple</small>
+    <small class="stat-sub">
+      <span class="stat-sub-item"><span class="stat-label-icon stat-label-ok" aria-hidden="true">✓</span> {{ resumen_mes.cumple }} cumple</span>
+      <span class="stat-sub-sep">·</span>
+      <span class="stat-sub-item"><span class="stat-label-icon stat-label-no" aria-hidden="true">✕</span> {{ resumen_mes.no_cumple }} no cumple</span>
+    </small>
     <a href="{{ url_for('main.listar_registros', periodo='mensual', mes='%04d-%02d' % (hoy.year, hoy.month)) }}" class="stat-link">Ver mensual →</a>
   </article>
 </section>
@@ -58,11 +67,7 @@
           <td>{{ r.area }}</td>
           <td>{{ r.equipo_o_superficie }}</td>
           <td><span class="badge badge-role">{{ r.frecuencia }}</span></td>
-          <td>
-            <span class="badge {% if r.cumple %}badge-ok{% else %}badge-warn{% endif %}">
-              {{ r.estado_etiqueta }}
-            </span>
-          </td>
+          <td>{{ badge_estado(r.cumple) }}</td>
           <td>{{ r.responsable }}</td>
         </tr>
         {% endfor %}

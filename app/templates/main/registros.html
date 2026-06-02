@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% from "macros/estado_badge.html" import badge_estado %}
 {% block title %}Registros — SanitApp{% endblock %}
+{% block body_class %}page-registros{% endblock %}
 
 {% block content %}
 <header class="page-header">
@@ -61,58 +63,67 @@
     <span class="stat-value">{{ resumen.total }}</span>
   </article>
   <article class="stat-card stat-ok">
-    <span class="stat-label">Cumple</span>
+    <span class="stat-label"><span class="stat-label-icon stat-label-ok" aria-hidden="true">✓</span> Cumple</span>
     <span class="stat-value">{{ resumen.cumple }}</span>
   </article>
   <article class="stat-card stat-warn">
-    <span class="stat-label">No cumple</span>
+    <span class="stat-label"><span class="stat-label-icon stat-label-no" aria-hidden="true">✕</span> No cumple</span>
     <span class="stat-value">{{ resumen.no_cumple }}</span>
   </article>
 </section>
 
-<div class="card">
-  {% if registros %}
-  <div class="table-wrap">
-    <table class="data-table data-table-formato">
-      <thead>
-        <tr>
-          <th>FECHA</th>
-          <th>ÁREA</th>
-          <th>EQUIPO O SUPERFICIE</th>
-          <th>FRECUENCIA</th>
-          <th>NO CUMPLE</th>
-          <th>CUMPLE</th>
-          <th>MEDIDA CORRECTIVA</th>
-          <th>RESPONSABLE</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in registros %}
-        <tr>
-          <td>{{ r.fecha.strftime('%d/%m/%Y') }}</td>
-          <td>{{ r.area }}</td>
-          <td>{{ r.equipo_o_superficie }}</td>
-          <td><span class="badge badge-role">{{ r.frecuencia }}</span></td>
-          <td class="center">{% if r.no_cumple %}<span class="mark mark-no" aria-label="No cumple">✕</span>{% endif %}</td>
-          <td class="center">{% if r.cumple %}<span class="mark mark-ok" aria-label="Cumple">✓</span>{% endif %}</td>
-          <td>{{ r.medida_correctiva or '—' }}</td>
-          <td>{{ r.responsable }}</td>
-          <td class="actions">
-            <a href="{{ url_for('main.editar_registro', registro_id=r.id) }}" class="btn btn-ghost btn-sm">Editar</a>
-            {% if usuario_actual.es_admin %}
-            <form method="post" action="{{ url_for('main.eliminar_registro', registro_id=r.id) }}" class="inline-form" onsubmit="return confirm('¿Eliminar este registro?');">
-              <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-            </form>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <p class="empty-state">No hay registros en este periodo{% if frecuencia_filtro %} con frecuencia «{{ frecuencia_filtro }}»{% endif %}.</p>
-  {% endif %}
+{% if registros %}
+<div class="registros-lista">
+  {% for r in registros %}
+  <article class="registro-card card">
+    <header class="registro-card-header">
+      <div class="registro-card-meta">
+        <span class="registro-fecha">{{ r.fecha.strftime('%d/%m/%Y') }}</span>
+        <span class="badge badge-role">{{ r.frecuencia }}</span>
+        {{ badge_estado(r.cumple) }}
+      </div>
+      <div class="registro-card-actions">
+        <a href="{{ url_for('main.editar_registro', registro_id=r.id) }}" class="btn btn-ghost btn-sm">Editar</a>
+        {% if usuario_actual.es_admin %}
+        <form method="post" action="{{ url_for('main.eliminar_registro', registro_id=r.id) }}" class="inline-form form-eliminar-registro">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm js-eliminar-registro"
+            data-fecha="{{ r.fecha.strftime('%d/%m/%Y') }}"
+            data-area="{{ r.area }}"
+            data-equipo="{{ r.equipo_o_superficie }}"
+            data-responsable="{{ r.responsable }}"
+          >Eliminar</button>
+        </form>
+        {% endif %}
+      </div>
+    </header>
+    <dl class="registro-card-body">
+      <div class="registro-field">
+        <dt>Área</dt>
+        <dd>{{ r.area }}</dd>
+      </div>
+      <div class="registro-field">
+        <dt>Equipo o superficie</dt>
+        <dd>{{ r.equipo_o_superficie }}</dd>
+      </div>
+      <div class="registro-field">
+        <dt>Responsable</dt>
+        <dd>{{ r.responsable }}</dd>
+      </div>
+      {% if r.medida_correctiva %}
+      <div class="registro-field registro-field-full">
+        <dt>Medida correctiva</dt>
+        <dd>{{ r.medida_correctiva }}</dd>
+      </div>
+      {% endif %}
+    </dl>
+  </article>
+  {% endfor %}
 </div>
+{% else %}
+<div class="card">
+  <p class="empty-state">No hay registros en este periodo{% if frecuencia_filtro %} con frecuencia «{{ frecuencia_filtro }}»{% endif %}.</p>
+</div>
+{% endif %}
 {% endblock %}
